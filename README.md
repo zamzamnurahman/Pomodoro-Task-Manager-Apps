@@ -8,7 +8,9 @@
 - Pilih device android yang ada 
 - Lalu jalankan project tersebut dengan mengetikkan ``flutter run`` di terminal
 
-<br><br>
+<br><br><br>
 <Center> Pemrograman Mobile </Center>
+<br>
 <Center>Insitut Teknologi Garut - Teknik Informatika</Center>
+<br>
 <Center> Zamzam Nurahman</Center>
