@@ -1,16 +1,9 @@
-# pomodoro_task_manager
+# Pomodoro Task Manager Application
 
-A new Flutter project.
 
-## Getting Started
+## Cara menjalankan Aplikasi di lokal
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Clone terlebih dahulu repositori ini
+- Kemudian buka terminal lalu ketikkan ``flutter pub get`` untuk menginstall depedensi yang di butuhkan di project
+- Pilih device android yang ada 
+- Lalu jalankan project tersebut dengan mengetikkan ``flutter run`` di terminal
