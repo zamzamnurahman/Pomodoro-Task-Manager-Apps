@@ -8,6 +8,8 @@
 - Pilih device android yang ada 
 - Lalu jalankan project tersebut dengan mengetikkan ``flutter run`` di terminal
 
+<a href="https://www.figma.com/file/QhgiiXkh1q0up1tlc7Vos2/Pomodoro-Task-manager?type=design&node-id=1%3A165&mode=design&t=V3NtzAIxUP1hfGYP-1">Link Desain aplikasi</a>
+
 <br><br><br>
 <Center> - Pemrograman Mobile - </Center>
 <br>
