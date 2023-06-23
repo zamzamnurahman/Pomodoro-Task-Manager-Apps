@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pomodoro_task_manager/src/presentations/screens/authentication_screen.dart';
-import 'package:pomodoro_task_manager/src/presentations/screens/home_screen.dart';
+import 'package:pomodoro_task_manager/src/presentations/screens/main_screen.dart';
 import 'package:pomodoro_task_manager/src/presentations/screens/splash_screen.dart';
 
 class AppRoutes {
@@ -23,7 +23,7 @@ class AppRoutes {
 
   static Page _homeScreenBuilder(BuildContext context, GoRouterState state) {
     return const MaterialPage(
-      child: HomeScreen(),
+      child: MainScreen(),
     );
   }
 

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_task_manager/src/config/theme.dart';
+import 'package:pomodoro_task_manager/src/presentations/screens/pomodoro_screen.dart';
 
-class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+class MainScreen extends ConsumerStatefulWidget {
+  const MainScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _HomeScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MainScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _MainScreenState extends ConsumerState<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,6 +23,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               color: Colors.black,
               fontWeight: FontWeight.bold,
             )),
+      ),
+      body: IndexedStack(
+        index: 0,
+        children: [
+          PomodoroScreen(),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
