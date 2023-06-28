@@ -1,14 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pomodoro_task_manager/src/data/user/user_notifier.dart';
 import 'package:pomodoro_task_manager/src/presentations/widgets/logo.dart';
+
+import '../../data/authentication.dart';
 
 class AuthenticationScreen extends ConsumerWidget {
   const AuthenticationScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final auth = ref.watch(userProvider.notifier);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -44,23 +49,46 @@ class AuthenticationScreen extends ConsumerWidget {
             const Text(
               "Pomodoro Task Manager, membatu kamu dalam produktivitas belajar menggunakan teknik Pomodoro.",
             ),
-            ElevatedButton.icon(
-              onPressed: () {
-                GoRouter.of(context).pushReplacementNamed("/home");
+            FutureBuilder(
+              future: Authentication.initializeFirebase(context: context),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('Error initializing Firebase');
+                } else if (snapshot.connectionState == ConnectionState.done) {
+                  return ElevatedButton.icon(
+                    onPressed: () async {
+                      final isSignIn = await auth.getUser(context);
+
+                      // User? user = await Authentication.signInWithGoogle(
+                      //   context: context,
+                      // );
+                      //
+                      if (isSignIn) {
+                        if (!context.mounted) return;
+                        GoRouter.of(context).pushReplacementNamed("/home");
+                      }
+                    },
+                    icon: SvgPicture.asset("assets/google.svg"),
+                    label: const Text("Masuk dengan Google"),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 5,
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.all(15),
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide(),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  );
+                }
+                return const SizedBox(
+                  height: 25,
+                  width: 25,
+                  child: CircularProgressIndicator(),
+                );
               },
-              icon: SvgPicture.asset("assets/google.svg"),
-              label: const Text("Masuk dengan Google"),
-              style: ElevatedButton.styleFrom(
-                elevation: 5,
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
-                padding: const EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(
-                  side: const BorderSide(),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-            )
+            ),
           ],
         ),
       ),

@@ -16,6 +16,9 @@ dependencies:
   go_router: ^8.0.1
   circular_countdown_timer: ^0.2.3
   neon_circular_timer: ^0.0.7
+  firebase_core: ^2.14.0
+  firebase_auth: ^4.6.3
+  google_sign_in: ^6.1.4
 
 dev_dependencies:
   flutter_test:

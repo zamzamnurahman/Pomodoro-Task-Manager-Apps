@@ -1,4 +1,4 @@
-package com.example.pomodoro_task_manager
+package com.mabadev.pomodoro_task_manager
 
 import io.flutter.embedding.android.FlutterActivity
 

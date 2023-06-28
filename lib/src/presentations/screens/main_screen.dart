@@ -2,6 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_task_manager/src/config/theme.dart';
 import 'package:pomodoro_task_manager/src/presentations/screens/pomodoro_screen.dart';
+import 'package:pomodoro_task_manager/src/presentations/screens/profile_screens.dart';
+import 'package:pomodoro_task_manager/src/presentations/screens/task_screens.dart';
+
+final navBottomProvider =
+    StateNotifierProvider<BottomNavigationNotifier, int>((ref) {
+  return BottomNavigationNotifier();
+});
+
+class BottomNavigationNotifier extends StateNotifier<int> {
+  BottomNavigationNotifier() : super(0);
+
+  changeIndex(int newIndex)=> state = newIndex;
+}
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
@@ -13,6 +26,7 @@ class MainScreen extends ConsumerStatefulWidget {
 class _MainScreenState extends ConsumerState<MainScreen> {
   @override
   Widget build(BuildContext context) {
+    final int index = ref.watch(navBottomProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -25,15 +39,17 @@ class _MainScreenState extends ConsumerState<MainScreen> {
             )),
       ),
       body: IndexedStack(
-        index: 0,
-        children: [
+        index: index,
+        children: const [
           PomodoroScreen(),
+          TaskScreens(),
+          ProfileScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
+        currentIndex: index,
         selectedItemColor: primary,
-        onTap: (index) {},
+        onTap: ref.watch(navBottomProvider.notifier).changeIndex,
         items: const [
           BottomNavigationBarItem(
             label: "Pomodoro",

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "735667388242",
+    "project_id": "pomodoro-task-manager-apps",
+    "storage_bucket": "pomodoro-task-manager-apps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735667388242:android:64f6f31fb8cb0c9562448b",
+        "android_client_info": {
+          "package_name": "com.mabadev.pomodoro_task_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "735667388242-0rf3gkls44tfe9ilcd3gmso2drt5apov.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mabadev.pomodoro_task_manager",
+            "certificate_hash": "4fa7b0486ab38923e63806b3e925c5697a50ebb7"
+          }
+        },
+        {
+          "client_id": "735667388242-d0lu0p45oarv10s130n2ul33i7ovhspn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mabadev.pomodoro_task_manager",
+            "certificate_hash": "a245b41551fc95a8b813f7f1062a31d921015cc1"
+          }
+        },
+        {
+          "client_id": "735667388242-0b4kc9rkdqo5huauki2nsnukv0kco095.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4Jr_BkL7YckJdieKYrUCmxNRyHYafBaw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "735667388242-0b4kc9rkdqo5huauki2nsnukv0kco095.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

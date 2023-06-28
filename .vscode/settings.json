@@ -1,3 +1,5 @@
 {
-  "dart.flutterSdkPath": "/home/zednr/dev/flutter"
+  "dart.flutterSdkPath": "/home/zednr/dev/flutter",
+  "java.configuration.updateBuildConfiguration": "interactive",
+  // "java.configuration.updateBuildConfiguration": "automatic"
 }
