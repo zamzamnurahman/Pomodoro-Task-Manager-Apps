@@ -3,6 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_task_manager/src/config/theme.dart';
 
+///[total pomodoro]
+final totalProvider = StateNotifierProvider<TotalNotifier, int>((ref) {
+  return TotalNotifier();
+});
+
+class TotalNotifier extends StateNotifier<int> {
+  TotalNotifier() : super(1);
+
+  setTotal(int neValue) => state = neValue;
+}
+
 ///[NAVIGATION MENU]
 final navProvider = StateNotifierProvider<NavNotifier, int>((ref) {
   return NavNotifier();
@@ -34,9 +45,6 @@ class PomodoroScreen extends ConsumerStatefulWidget {
 }
 
 class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
-  int duration = 1500;
-  int duration2 = 300;
-  int duration3 = 900;
   final CountDownController _ctrl1 = CountDownController();
   final CountDownController _ctrl2 = CountDownController();
   final CountDownController _ctrl3 = CountDownController();
@@ -44,6 +52,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
   Widget build(BuildContext context) {
     final timer = ref.watch(playtimerProvider.notifier);
     final int _index = ref.watch(navProvider);
+    final int total = ref.watch(totalProvider);
     final String statusPlay = ref.watch(playtimerProvider);
     return Scaffold(
       body: Padding(
@@ -60,7 +69,9 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
                   child: Text(
                     "Pomodoro",
                     style: TextStyle(
-                        fontWeight: _index == 0 ? FontWeight.bold : null),
+                      fontWeight: _index == 0 ? FontWeight.bold : null,
+                      fontSize: _index == 0 ? 20 : 14,
+                    ),
                   ),
                 ),
                 TextButton(
@@ -70,7 +81,9 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
                     child: Text(
                       "Break",
                       style: TextStyle(
-                          fontWeight: _index == 1 ? FontWeight.bold : null),
+                        fontWeight: _index == 1 ? FontWeight.bold : null,
+                        fontSize: _index == 1 ? 20 : 14,
+                      ),
                     )),
                 TextButton(
                     onPressed: () {
@@ -79,7 +92,9 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
                     child: Text(
                       "Istirahat",
                       style: TextStyle(
-                          fontWeight: _index == 2 ? FontWeight.bold : null),
+                        fontWeight: _index == 2 ? FontWeight.bold : null,
+                        fontSize: _index == 2 ? 20 : 14,
+                      ),
                     )),
               ],
             ),
@@ -87,8 +102,8 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
               index: _index,
               children: [
                 TimerPomodoro(duration: 5, ctrl1: _ctrl1, ctrl2: _ctrl2),
-                TimerPomodoro(duration: 10, ctrl1: _ctrl2, ctrl2: _ctrl3),
-                TimerPomodoro(duration: 15, ctrl1: _ctrl3, ctrl2: _ctrl1),
+                TimerPomodoro(duration: 8, ctrl1: _ctrl2, ctrl2: _ctrl3),
+                TimerPomodoro(duration: 10, ctrl1: _ctrl3, ctrl2: _ctrl1),
               ],
             ),
             Row(
@@ -169,7 +184,38 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
                 ),
                 TextButton(
                     onPressed: () {
-                      _ctrl1.restart();
+                      if (statusPlay == "start") {
+                        timer.setPlay("not start");
+                        switch (_index) {
+                          case 0:
+                            _ctrl1.reset();
+                            break;
+                          case 1:
+                            _ctrl2.reset();
+                            break;
+                          case 2:
+                            _ctrl3.reset();
+                          default:
+                        }
+                      }
+                      if (_index == 2) {
+                        ref.watch(navProvider.notifier).setNavigation(0);
+                        _ctrl1.start();
+                        timer.setPlay('start');
+                      } else {
+                        switch (_index) {
+                          case 0:
+                            ref.watch(navProvider.notifier).setNavigation(1);
+                            _ctrl2.start();
+                            timer.setPlay('start');
+                            break;
+                          case 1:
+                            ref.watch(navProvider.notifier).setNavigation(2);
+                            _ctrl3.start();
+                            timer.setPlay('start');
+                          default:
+                        }
+                      }
                     },
                     child: const Text("Lanjut")),
               ],
@@ -225,10 +271,18 @@ class TimerPomodoro extends ConsumerWidget {
         onComplete: () {
           ref.watch(playtimerProvider.notifier).setPlay('not start');
           final index = ref.watch(navProvider);
-          if (index == 2) {
+          final int total = ref.watch(totalProvider);
+          if (total == 2) {
             ref.watch(navProvider.notifier).setNavigation(0);
+            ref.watch(totalProvider.notifier).setTotal(total + 1);
           } else {
-            ref.watch(navProvider.notifier).setNavigation(index + 1);
+            ref.watch(totalProvider.notifier).setTotal(total + 1);
+            if (index == 2) {
+              ref.watch(navProvider.notifier).setNavigation(0);
+              ref.watch(totalProvider.notifier).setTotal(1);
+            } else {
+              ref.watch(navProvider.notifier).setNavigation(index + 1);
+            }
           }
         },
         onChange: (String timeStamp) {
