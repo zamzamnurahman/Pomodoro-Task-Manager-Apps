@@ -225,13 +225,11 @@ class TimerPomodoro extends ConsumerWidget {
         onComplete: () {
           ref.watch(playtimerProvider.notifier).setPlay('not start');
           final index = ref.watch(navProvider);
-          print("INDEX PERTASAMA $index");
           if (index == 2) {
             ref.watch(navProvider.notifier).setNavigation(0);
           } else {
             ref.watch(navProvider.notifier).setNavigation(index + 1);
           }
-          print("INDEX KEDUA $index");
         },
         onChange: (String timeStamp) {
           debugPrint('Countdown Changed $timeStamp');
