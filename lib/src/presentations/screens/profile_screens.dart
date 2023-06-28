@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pomodoro_task_manager/src/data/authentication.dart';
 import 'package:pomodoro_task_manager/src/data/user/user_notifier.dart';
 
 class ProfileScreen extends ConsumerWidget {
