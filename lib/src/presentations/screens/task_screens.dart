@@ -124,8 +124,10 @@ class _TaskScreensState extends ConsumerState<TaskScreens> {
                                   }),
                             );
                           } else {
-                            return const Center(
-                              child: Text("Tidak ada tugas"),
+                            return const Expanded(
+                              child: Center(
+                                child: Text("Tidak ada tugas"),
+                              ),
                             );
                           }
                         }),
@@ -213,7 +215,7 @@ class _TaskScreensState extends ConsumerState<TaskScreens> {
                               itemBuilder: (_, index) {
                                 final DocumentSnapshot todo =
                                     snapshot.data!.docs[index];
-                                if (todo['status']) {
+                                if (todo['status'] && todo['user_id'] == user!.uid) {
                                   return Dismissible(
                                     background: Container(
                                       color: Colors.red,
@@ -264,8 +266,10 @@ class _TaskScreensState extends ConsumerState<TaskScreens> {
                               }),
                         );
                       } else {
-                        return const Center(
-                          child: Text("Tidak ada tugas"),
+                        return const Expanded(
+                          child: Center(
+                            child: Text("Tidak ada tugas"),
+                          ),
                         );
                       }
                     }),

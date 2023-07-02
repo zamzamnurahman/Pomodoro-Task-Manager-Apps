@@ -18,7 +18,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   void initState() {
     WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) async{
       ref.watch(userProvider.notifier).setUser().then((value) {
-        print(value);
         if(value is User){
           context.goNamed('/home');
         }else{

@@ -55,6 +55,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
   final CountDownController _ctrl3 = CountDownController();
   @override
   Widget build(BuildContext context) {
+    final User? user = ref.watch(userProvider);
     final int index = ref.watch(navProvider);
     final timer = ref.watch(playtimerProvider.notifier);
     final String statusPlay = ref.watch(playtimerProvider);
@@ -75,6 +76,8 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
     }
 
     handlePlayButton() {
+      print(statusPlay);
+      print(index);
       switch (index) {
         case 0:
           if (statusPlay == "not start") {
@@ -233,12 +236,14 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
               ],
             ),
             StreamBuilder(
-                stream:
-                    FirebaseFirestore.instance.collection("todo").orderBy('created_at',descending: false).snapshots(),
+                stream: FirebaseFirestore.instance
+                    .collection("todo")
+                    .orderBy('created_at', descending: false)
+                    .snapshots(),
                 builder: (_, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
-                  }else{
+                  } else {
                     if (snapshot.hasData) {
                       return SizedBox(
                         height: MediaQuery.of(context).size.height * 0.08,
@@ -247,13 +252,13 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (_, i) {
                               final todo = snapshot.data!.docs[i];
-                              if(!todo['status']){
+                              if (!todo['status'] && todo['user_id'] == user!.uid) {
                                 return Dismissible(
                                   background: Container(
                                     color: Colors.red,
                                     child: const Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                          MainAxisAlignment.spaceAround,
                                       children: [
                                         Icon(Icons.delete),
                                         Icon(Icons.delete),
@@ -267,8 +272,8 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
                                         const SnackBar(
                                             behavior: SnackBarBehavior.floating,
                                             backgroundColor: Colors.red,
-                                            content:
-                                            Text('Tugas berhasil dihapus')));
+                                            content: Text(
+                                                'Tugas berhasil dihapus')));
                                   },
                                   child: Card(
                                     shape: RoundedRectangleBorder(
@@ -285,15 +290,14 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
                                     ),
                                   ),
                                 );
-                              }else{
+                              } else {
                                 return const Visibility(
                                     visible: false, child: SizedBox());
                               }
-
                             }),
                       );
                     } else {
-                      return  const Padding(
+                      return const Padding(
                         padding: EdgeInsets.all(20.0),
                         child: Center(
                           child: Text("Tidak ada Tugas"),
@@ -301,7 +305,6 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
                       );
                     }
                   }
-
                 }),
           ],
         ),

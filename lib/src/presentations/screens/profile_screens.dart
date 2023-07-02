@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_task_manager/src/data/authentication.dart';
 import 'package:pomodoro_task_manager/src/data/user/user_notifier.dart';
 import 'package:pomodoro_task_manager/src/presentations/screens/main_screen.dart';
+import 'package:pomodoro_task_manager/src/presentations/screens/pomodoro_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -31,8 +32,9 @@ class ProfileScreen extends ConsumerWidget {
           TextButton.icon(
             onPressed: () {
               Authentication.signOut(context: context);
-              ref.invalidate(userProvider);
               ref.invalidate(navBottomProvider);
+              ref.invalidate(navProvider);
+              ref.invalidate(playtimerProvider);
             },
             label: const Text("Keluar"),
             icon: const Icon(
