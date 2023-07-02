@@ -58,16 +58,14 @@ class Authentication {
     return user;
   }
 
-  static Future<FirebaseApp> initializeFirebase({
-    required BuildContext context,
-  }) async {
+  Future initializeFirebase() async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
 
     User? user = FirebaseAuth.instance.currentUser;
-
     if (user != null) {
-      if (context.mounted) return firebaseApp;
-      GoRouter.of(context).pushReplacementNamed("/home");
+      // if (context!.mounted) return;s
+      // GoRouter.of(context!).pushReplacementNamed("/home");
+      return user;
     }
 
     return firebaseApp;

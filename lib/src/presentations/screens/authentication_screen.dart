@@ -50,7 +50,7 @@ class AuthenticationScreen extends ConsumerWidget {
               "Pomodoro Task Manager, membatu kamu dalam produktivitas belajar menggunakan teknik Pomodoro.",
             ),
             FutureBuilder(
-              future: Authentication.initializeFirebase(context: context),
+              future: Authentication().initializeFirebase(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return const Text('Error initializing Firebase');

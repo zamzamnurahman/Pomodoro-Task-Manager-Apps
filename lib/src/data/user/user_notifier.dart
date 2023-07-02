@@ -23,5 +23,11 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  Future setUser()async{
+    final User result = await auth.initializeFirebase();
+    state = result;
+    return result;
+  }
+
 
 }
