@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pomodoro_task_manager/src/data/authentication.dart';
 import 'package:pomodoro_task_manager/src/data/user/user_notifier.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -27,7 +28,9 @@ class ProfileScreen extends ConsumerWidget {
           const SizedBox(height: 10),
           const Spacer(),
           TextButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              Authentication.signOut(context: context);
+            },
             label: const Text("Keluar"),
             icon: const Icon(
               Icons.logout,

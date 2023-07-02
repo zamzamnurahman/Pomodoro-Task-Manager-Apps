@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_task_manager/src/data/todo/todo_api.dart';
+import 'package:pomodoro_task_manager/src/data/user/user_notifier.dart';
 
 import '../../config/theme.dart';
 
@@ -31,6 +33,7 @@ class _TaskScreensState extends ConsumerState<TaskScreens> {
 
   @override
   Widget build(BuildContext context) {
+    final User? user = ref.watch(userProvider);
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -57,11 +60,12 @@ class _TaskScreensState extends ConsumerState<TaskScreens> {
                               curve: Curves.bounceIn,
                             );
                           },
-                          child: const Text("Belum Selesai")),
+                          child: const Text("Sudah Selesai")),
                     ),
                     StreamBuilder(
                         stream: FirebaseFirestore.instance
                             .collection("todo")
+                            .orderBy("created_at", descending: false)
                             .snapshots(),
                         builder: (_, snapshot) {
                           if (snapshot.hasData) {
@@ -72,7 +76,7 @@ class _TaskScreensState extends ConsumerState<TaskScreens> {
                                   itemBuilder: (_, index) {
                                     final DocumentSnapshot todo =
                                         snapshot.data!.docs[index];
-                                    if (!todo['status']) {
+                                    if (!todo['status'] && todo['user_id'] == user!.uid) {
                                       return Dismissible(
                                         background: Container(
                                           color: Colors.red,
@@ -80,8 +84,8 @@ class _TaskScreensState extends ConsumerState<TaskScreens> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceAround,
                                             children: [
-                                              Icon(Icons.clear_rounded),
-                                              Icon(Icons.clear_rounded),
+                                              Icon(Icons.delete),
+                                              Icon(Icons.delete),
                                             ],
                                           ),
                                         ),
@@ -152,7 +156,7 @@ class _TaskScreensState extends ConsumerState<TaskScreens> {
                               onPressed: () {
                                 if (_globalKey.currentState!.validate()) {
                                   TodoApi()
-                                      .uploadingData(title: _titleCtrl.text);
+                                      .uploadingData(title: _titleCtrl.text, user: user);
                                   _titleCtrl.clear();
                                 }
                                 FocusScope.of(context).unfocus();
@@ -184,11 +188,11 @@ class _TaskScreensState extends ConsumerState<TaskScreens> {
                             curve: Curves.bounceIn);
                       },
                       child: const Text(
-                        "Tugas Selesai",
+                        "Tugas Belum Selesai",
                         style: TextStyle(fontSize: 14),
                       )),
                   trailing: const Text(
-                    "Belum Selesai",
+                    "Sudah Selesai",
                     style: TextStyle(
                         color: primary,
                         fontWeight: FontWeight.bold,
@@ -198,6 +202,7 @@ class _TaskScreensState extends ConsumerState<TaskScreens> {
                 StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection("todo")
+                        .orderBy("created_at", descending: true)
                         .snapshots(),
                     builder: (_, snapshot) {
                       if (snapshot.hasData) {
@@ -209,22 +214,46 @@ class _TaskScreensState extends ConsumerState<TaskScreens> {
                                 final DocumentSnapshot todo =
                                     snapshot.data!.docs[index];
                                 if (todo['status']) {
-                                  return Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: ListTile(
-                                      title: Text(
-                                        todo['title'],
-                                        style: const TextStyle(
-                                            decoration:
-                                                TextDecoration.lineThrough),
+                                  return Dismissible(
+                                    background: Container(
+                                      color: Colors.red,
+                                      child: const Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Icon(Icons.delete),
+                                          Icon(Icons.delete),
+                                        ],
                                       ),
-                                      trailing: IconButton(
-                                        onPressed: () {
-                                          TodoApi().editProduct(false, todo.id);
-                                        },
-                                        icon: const Icon(Icons.close),
+                                    ),
+                                    key: Key(todo.id),
+                                    onDismissed: (direction) {
+                                      TodoApi().deleteProduct(todo);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                          behavior:
+                                          SnackBarBehavior.floating,
+                                          backgroundColor: Colors.red,
+                                          content: Text(
+                                              'Tugas berhasil dihapus')));
+                                    },
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: ListTile(
+                                        title: Text(
+                                          todo['title'],
+                                          style: const TextStyle(
+                                              decoration:
+                                                  TextDecoration.lineThrough),
+                                        ),
+                                        trailing: IconButton(
+                                          onPressed: () {
+                                            TodoApi().editProduct(false, todo.id);
+                                          },
+                                          icon: const Icon(Icons.close),
+                                        ),
                                       ),
                                     ),
                                   );

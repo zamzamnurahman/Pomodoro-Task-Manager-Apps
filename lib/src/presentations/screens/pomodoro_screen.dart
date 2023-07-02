@@ -1,7 +1,11 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/todo/todo_api.dart';
+import '../../data/user/user_notifier.dart';
 import '../widgets/timer_countdown.dart';
 
 ///[total pomodoro]
@@ -146,6 +150,7 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
       }
     }
 
+    // final User? user = ref.watch(userProvider);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -193,9 +198,9 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
             IndexedStack(
               index: index,
               children: [
-                TimerPomodoro(duration: 5, ctrl1: _ctrl1, ctrl2: _ctrl2),
-                TimerPomodoro(duration: 8, ctrl1: _ctrl2, ctrl2: _ctrl3),
-                TimerPomodoro(duration: 10, ctrl1: _ctrl3, ctrl2: _ctrl1),
+                TimerPomodoro(duration: 1500, ctrl1: _ctrl1, ctrl2: _ctrl2),
+                TimerPomodoro(duration: 300, ctrl1: _ctrl2, ctrl2: _ctrl3),
+                TimerPomodoro(duration: 900, ctrl1: _ctrl3, ctrl2: _ctrl1),
               ],
             ),
             Row(
@@ -226,7 +231,78 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
                   child: const Text("Lanjut"),
                 ),
               ],
-            )
+            ),
+            StreamBuilder(
+                stream:
+                    FirebaseFirestore.instance.collection("todo").orderBy('created_at',descending: false).snapshots(),
+                builder: (_, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }else{
+                    if (snapshot.hasData) {
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.08,
+                        child: ListView.builder(
+                            itemCount: snapshot.data!.docs.length,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (_, i) {
+                              final todo = snapshot.data!.docs[i];
+                              if(!todo['status']){
+                                return Dismissible(
+                                  background: Container(
+                                    color: Colors.red,
+                                    child: const Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Icon(Icons.delete),
+                                        Icon(Icons.delete),
+                                      ],
+                                    ),
+                                  ),
+                                  key: Key(todo.id),
+                                  onDismissed: (direction) {
+                                    TodoApi().deleteProduct(todo);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            behavior: SnackBarBehavior.floating,
+                                            backgroundColor: Colors.red,
+                                            content:
+                                            Text('Tugas berhasil dihapus')));
+                                  },
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: ListTile(
+                                      title: Text(todo['title']),
+                                      trailing: IconButton(
+                                        onPressed: () {
+                                          TodoApi().editProduct(true, todo.id);
+                                        },
+                                        icon: const Icon(Icons.check),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }else{
+                                return const Visibility(
+                                    visible: false, child: SizedBox());
+                              }
+
+                            }),
+                      );
+                    } else {
+                      return  const Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Center(
+                          child: Text("Tidak ada Tugas"),
+                        ),
+                      );
+                    }
+                  }
+
+                }),
           ],
         ),
       ),
