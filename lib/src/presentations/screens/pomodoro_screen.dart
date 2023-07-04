@@ -76,8 +76,6 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
     }
 
     handlePlayButton() {
-      print(statusPlay);
-      print(index);
       switch (index) {
         case 0:
           if (statusPlay == "not start") {
@@ -252,7 +250,8 @@ class _PomodoroScreenState extends ConsumerState<PomodoroScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (_, i) {
                               final todo = snapshot.data!.docs[i];
-                              if (!todo['status'] && todo['user_id'] == user!.uid) {
+                              if (!todo['status'] &&
+                                  todo['user_id'] == user!.uid) {
                                 return Dismissible(
                                   background: Container(
                                     color: Colors.red,

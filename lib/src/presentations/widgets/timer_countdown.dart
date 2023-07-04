@@ -1,7 +1,6 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:just_audio/just_audio.dart';
 
 import '../../config/theme.dart';
 import '../screens/pomodoro_screen.dart';
@@ -44,13 +43,8 @@ class TimerPomodoro extends ConsumerWidget {
         isReverseAnimation: true,
         isTimerTextShown: true,
         autoStart: false,
-        onStart: () {
-          debugPrint('Countdown Started');
-        },
-        onComplete: () async{
-          final player = AudioPlayer();
-          final duration = await player.setAsset('assets/audio/alarm.wav');
-          await player.play();
+        onStart: () {},
+        onComplete: () async {
           ref.watch(playtimerProvider.notifier).setPlay('not start');
           final index = ref.watch(navProvider);
           final int total = ref.watch(totalProvider);
@@ -67,9 +61,7 @@ class TimerPomodoro extends ConsumerWidget {
             }
           }
         },
-        onChange: (String timeStamp) {
-          debugPrint('Countdown Changed $timeStamp');
-        },
+        onChange: (String timeStamp) {},
         timeFormatterFunction: (defaultFormatterFunction, duration) {
           if (duration.inSeconds == 0) {
             return "Finish";

@@ -41,20 +41,15 @@ class Authentication {
               content: 'The account already exists with a different credential',
             ),
           );
-        } else if (e.code == 'invalid-credential') {
-          // handle the error here
-        }
+        } else if (e.code == 'invalid-credential') {}
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           Authentication.customSnackBar(
             content: "ERROR $e",
           ),
         );
-        // handle the error here
       }
     }
-    print(user?.email);
-    print(user?.displayName);
     return user;
   }
 

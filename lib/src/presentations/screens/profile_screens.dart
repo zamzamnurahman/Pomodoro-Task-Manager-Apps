@@ -21,9 +21,16 @@ class ProfileScreen extends ConsumerWidget {
           Card(
             child: ListTile(
               leading: Container(
-                child: Image.network(user!.photoURL!),
+                child: user?.photoURL == null
+                    ? const Icon(Icons.person, size: 50)
+                    : Image.network(
+                        user!.photoURL!,
+                        errorBuilder: (_, object, error) {
+                          return const Icon(Icons.person);
+                        },
+                      ),
               ),
-              title: Text(user.displayName!),
+              title: Text(user!.displayName!),
               subtitle: Text(user.email!),
             ),
           ),
